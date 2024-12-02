@@ -1,36 +1,55 @@
+import { auth } from "@/server/auth";
 import Link from "next/link";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const session = await auth();
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
-      <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-        <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-          Create <span className="text-[hsl(280,100%,70%)]">T3</span> App
-        </h1>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="https://create.t3.gg/en/usage/first-steps"
-            target="_blank"
-          >
-            <h3 className="text-2xl font-bold">First Steps →</h3>
-            <div className="text-lg">
-              Just the basics - Everything you need to know to set up your
-              database and authentication.
-            </div>
-          </Link>
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="https://create.t3.gg/en/introduction"
-            target="_blank"
-          >
-            <h3 className="text-2xl font-bold">Documentation →</h3>
-            <div className="text-lg">
-              Learn more about Create T3 App, the libraries it uses, and how to
-              deploy it.
-            </div>
-          </Link>
+    <main className="flex min-h-screen flex-col items-center justify-center p-24">
+      <div className="w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
+        <div className="flex w-full justify-center lg:justify-start">
+          <h1 className="text-4xl font-bold">Progress Tracker</h1>
         </div>
+        <div className="mt-4 flex justify-center gap-4 lg:mt-0">
+          {session ? (
+            <div className="flex items-center gap-4">
+              <span>Welcome, {session.user?.name ?? session.user?.email}</span>
+              <Link
+                href="/api/auth/signout"
+                className="rounded-lg bg-red-600 px-4 py-2 text-white hover:bg-red-500"
+              >
+                Sign Out
+              </Link>
+            </div>
+          ) : (
+            <>
+              <Link
+                href="/auth/login"
+                className="rounded-lg bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-500"
+              >
+                Sign In
+              </Link>
+              <Link
+                href="/auth/register"
+                className="rounded-lg border border-indigo-600 px-4 py-2 text-indigo-600 hover:bg-indigo-50"
+              >
+                Sign Up
+              </Link>
+            </>
+          )}
+        </div>
+      </div>
+
+      <div className="mt-32 flex flex-col items-center">
+        {session ? (
+          <p className="text-center text-2xl">
+            Welcome to your Progress Tracker! Start tracking your progress now.
+          </p>
+        ) : (
+          <p className="text-center text-2xl">
+            Sign in to start tracking your progress.
+          </p>
+        )}
       </div>
     </main>
   );

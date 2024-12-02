@@ -17,7 +17,7 @@ import { type AdapterAccount } from "next-auth/adapters";
  *
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
-export const createTable = mysqlTableCreator((name) => `progress_${name}`);
+export const createTable = mysqlTableCreator((name) => name);
 
 export const posts = createTable(
   "post",
@@ -50,6 +50,7 @@ export const users = createTable("user", {
     fsp: 3,
   }).default(sql`CURRENT_TIMESTAMP(3)`),
   image: varchar("image", { length: 255 }),
+  password: varchar("password", { length: 255 }),
 });
 
 export const usersRelations = relations(users, ({ many }) => ({
